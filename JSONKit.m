@@ -2603,7 +2603,11 @@ JK_STATIC_INLINE BOOL jk_is_tagged_pointer(const void *objectPtr)
 JK_STATIC_INLINE uintptr_t jk_get_tagged_pointer_tag(const void *objectPtr)
 {
 #if JK_SUPPORT_MSB_TAGGED_POINTERS
-  return(((uintptr_t)objectPtr) >> 60);
+  if (@available(iOS 14, *)) { // Adds iOS 14 support https://github.com/johnezang/JSONKit/issues/203#issuecomment-700051845
+     return(((uintptr_t)objectPtr) & 0x7);
+  } else {
+     return(((uintptr_t)objectPtr) >> 60);
+  }
 #else
   return(((uintptr_t)objectPtr) & 0x0F);
 #endif
